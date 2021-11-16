@@ -76,8 +76,10 @@ ListNode* delete_last(ListNode* head)
 	if (temp->link == NULL)
 	{
 		removed = temp;
+		temp->link = NULL;
 		free(removed);
-		return head;
+		return NULL;
+
 	}
 	else
 	{
@@ -96,7 +98,7 @@ void print_list(ListNode* head)
 {
 	for (ListNode* p = head; p != NULL; p = p->link)
 		printf("%d->", p->data);
-		printf("NULL \n");
+	printf("NULL \n");
 }
 
 ListNode* reverse(ListNode* head)
@@ -175,7 +177,18 @@ element get_entry(ListNode* head, int pos)
 
 ListNode* delete_by_key(ListNode* head, int key)
 {
-
+	ListNode* temp = head;
+	ListNode* prevTemp = NULL;
+	ListNode* removed;
+	if (head == NULL) error("삭제할 항목이 없음");
+	while (temp->data != key) {
+		prevTemp = temp;
+		temp = temp->link;
+	}
+	removed = temp;
+	prevTemp->link = removed->link;
+	free(removed);
+	return head;
 	
 }
 
@@ -207,32 +220,24 @@ ListNode* insert_pos(ListNode* head, int pos, element value)
 
 ListNode* delete_pos(ListNode* head, int pos)
 {
-	int len = 0;
-	ListNode* p;
-	ListNode* prevTemp;
+	ListNode* temp= head;
 	ListNode* removed;
-	if (head == NULL) return NULL;
-/*	if (pos == 0) {
+	ListNode* prevTemp = NULL;
+	if (head == NULL) error("삭제할 항목이 없음");
+	if (pos == 0) {
 		removed = head;
 		head = removed->link;
 		free(removed);
 		return head;
 	}
-	len++;
-*/
-	for (p = head; p != NULL; p = p->link) {
-		if (pos == len) {
-			if (pos == 0) {
-				removed = head;
-				head = removed->link;
-				free(removed);
-				return head;
-			}
-			removed = p;
-
-		}
-		len++;
+	for (int i = 0; i < pos; i++) {
+		prevTemp = temp;
+		temp = temp->link;
 	}
+	removed = temp;
+	prevTemp->link = removed->link;
+	free(removed);
+	return head;
 
 }
 
@@ -281,24 +286,15 @@ int main(void)
 	printf("list1의 노드 수 = %d\n", get_length(list1));
 	printf("list1의 모든 데이터 값의 합 = %d\n", get_total(list1));
 	printf("세 번째 노드에 있는 데이터는 %d입니다\n", get_entry(list1, 2));
-	list1 = insert_pos(list1, 2, 40);
+	delete_by_key(list1, 33);
 	printf("list1 = ");
 	print_list(list1);
-
-	ListNode* list4 = NULL;
-	list4 = insert_first(list4, 10);
-	printf("list4 = ");
-	print_list(list4);
-	delete_last(list4);
-	printf("list4 = ");
-	print_list(list4);
-
-
-
-
-
-
-	
+	insert_pos(list1, 3, 40);
+	printf("list1 = ");
+	print_list(list1);
+	delete_pos(list1, 3);
+	printf("list1 = ");
+	print_list(list1);
 
 }
 
